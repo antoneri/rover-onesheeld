@@ -7,6 +7,7 @@ class Robot {
   private:
     Motor left;
     Motor right;
+    void set_direction(int l, int r);
   public:
     Robot();
     void speed(unsigned int l, unsigned int r);
