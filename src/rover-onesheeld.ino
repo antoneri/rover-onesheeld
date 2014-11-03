@@ -42,6 +42,10 @@ void loop() {
             right.speed = y;
         }
 
+        /*
+         * The Arduino takes values for motor speed in the
+         * interval [0, 255] so we need to scale up our input.
+         */
         left.speed = abs(left.speed) * SCALE_FACTOR;
         right.speed = abs(right.speed) * SCALE_FACTOR;
 
