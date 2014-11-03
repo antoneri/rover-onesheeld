@@ -49,6 +49,9 @@ void loop() {
 
         /*
          * Set the speed and direction for each motor.
+         * TODO: rewrite Robot class to accept two structs containing the
+         *  speed and direction for each track. Then we can call with e.g.
+         *  robot.run(track_l, track_r)
          */
         if (left.direction > 0 && right.direction > 0) {
             robot.go_forward(left.speed, right.speed);
