@@ -8,11 +8,6 @@
 
 Robot robot;
 
-struct {
-    int direction;
-    int speed;
-} left, right;
-
 void setup() {
     OneSheeld.begin();
 }
@@ -22,6 +17,8 @@ void loop() {
     int y = ceil(AccelerometerSensor.getY());
 
     if (abs(x) > 1 || abs(y) > 1) {
+        Robot::track left, right;
+
         /*
          * Calculate the speed and direction from accelerometer data.
          * Negative x is forward, negative y is left.
@@ -47,21 +44,9 @@ void loop() {
         left.speed = abs(left.speed) * 25;
         right.speed = abs(right.speed) * 25;
 
-        /*
-         * Set the speed and direction for each motor.
-         * TODO: rewrite Robot class to accept two structs containing the
-         *  speed and direction for each track. Then we can call with e.g.
-         *  robot.run(track_l, track_r)
-         */
-        if (left.direction > 0 && right.direction > 0) {
-            robot.go_forward(left.speed, right.speed);
-        } else if (left.direction > 0 && right.direction < 0) {
-            robot.turn_left(left.speed, right.speed);
-        } else if (left.direction < 0 && right.direction > 0) {
-            robot.turn_right(left.speed, right.speed);
-        } else {
-            robot.go_backward(left.speed, right.speed);
-        }
+        /* Set the speed and direction for each motor. */
+        Robot::track tracks[2] = {left, right};
+        robot.run(tracks);
 
     } else {
         robot.stop();

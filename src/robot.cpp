@@ -39,6 +39,21 @@ void Robot::go_backward(unsigned int l, unsigned int r) {
     speed(l, r);
 }
 
+void Robot::run(track *tracks) {
+    track left = tracks[0];
+    track right = tracks[1];
+
+    if (left.direction > 0 && right.direction > 0) {
+        go_forward(left.speed, right.speed);
+    } else if (left.direction > 0 && right.direction < 0) {
+        turn_left(left.speed, right.speed);
+    } else if (left.direction < 0 && right.direction > 0) {
+        turn_right(left.speed, right.speed);
+    } else {
+        go_backward(left.speed, right.speed);
+    }
+}
+
 void Robot::stop() {
     set_direction(LOW, LOW);
     speed(0, 0);
