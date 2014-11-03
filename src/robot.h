@@ -8,17 +8,13 @@ class Robot {
     Motor left;
     Motor right;
     void setup();
-    void speed(unsigned int l, unsigned int r);
-    void direction(int l, int r);
     template <int L, int R>
-    void direct(unsigned int l, unsigned int r) {
-        direction(L, R);
-        speed(l, r);
+    void drive(unsigned int l, unsigned int r) {
+        left.direction(L);
+        right.direction(R);
+        left.speed(l);
+        right.speed(r);
     }
-    void turn_right(unsigned int l, unsigned int r);
-    void turn_left(unsigned int l, unsigned int r);
-    void go_forward(unsigned int l, unsigned int r);
-    void go_backward(unsigned int l, unsigned int r);
   public:
     typedef struct track {
         int direction;
