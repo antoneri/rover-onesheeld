@@ -1,6 +1,7 @@
 #include <OneSheeld.h>
 #include "robot.h"
 
+#define SCALE_FACTOR 25
 #define F_LEFT_Y_FAC 0.5
 #define F_RIGHT_Y_FAC 1.6
 #define B_LEFT_Y_FAC F_RIGHT_Y_FAC
@@ -41,8 +42,8 @@ void loop() {
             right.speed = y;
         }
 
-        left.speed = abs(left.speed) * 25;
-        right.speed = abs(right.speed) * 25;
+        left.speed = abs(left.speed) * SCALE_FACTOR;
+        right.speed = abs(right.speed) * SCALE_FACTOR;
 
         /* Set the speed and direction for each motor. */
         Robot::track tracks[2] = {left, right};
