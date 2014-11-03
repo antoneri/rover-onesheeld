@@ -7,7 +7,7 @@ class Robot {
   private:
     Motor left;
     Motor right;
-    void set_direction(int l, int r);
+    void direction(int l, int r);
     void speed(unsigned int l, unsigned int r);
   public:
     typedef struct track {
