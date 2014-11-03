@@ -5,11 +5,9 @@
 
 class Robot {
   private:
-    //Motor left;
-    //Motor right;
-  public:
     Motor left;
     Motor right;
+  public:
     Robot();
     void speed(unsigned int l, unsigned int r);
     void turn_right();
