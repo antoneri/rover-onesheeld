@@ -8,13 +8,13 @@ class Robot {
     Motor left;
     Motor right;
     void set_direction(int l, int r);
+    void speed(unsigned int l, unsigned int r);
   public:
     Robot();
-    void speed(unsigned int l, unsigned int r);
-    void turn_right();
-    void turn_left();
-    void go_forward();
-    void go_backward();
+    void turn_right(unsigned int l, unsigned int r);
+    void turn_left(unsigned int l, unsigned int r);
+    void go_forward(unsigned int l, unsigned int r);
+    void go_backward(unsigned int l, unsigned int r);
     void stop();
 };
 

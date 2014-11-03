@@ -23,7 +23,7 @@ void loop() {
 
     if (abs(x) > 1 || abs(y) > 1) {
         /*
-         * Set the speed on each motor.
+         * Calculate the speed and direction from accelerometer data.
          * Negative x is forward, negative y is left.
          */
         if (x < 0) {
@@ -48,19 +48,18 @@ void loop() {
         right.speed = abs(right.speed) * 25;
 
         /*
-         * Set the direction for each motor.
+         * Set the speed and direction for each motor.
          */
         if (left.direction > 0 && right.direction > 0) {
-            robot.go_forward();
+            robot.go_forward(left.speed, right.speed);
         } else if (left.direction > 0 && right.direction < 0) {
-            robot.turn_left();
+            robot.turn_left(left.speed, right.speed);
         } else if (left.direction < 0 && right.direction > 0) {
-            robot.turn_right();
+            robot.turn_right(left.speed, right.speed);
         } else {
-            robot.go_backward();
+            robot.go_backward(left.speed, right.speed);
         }
 
-        robot.speed(left.speed, right.speed);
     } else {
         robot.stop();
     }

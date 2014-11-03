@@ -19,25 +19,28 @@ void Robot::set_direction(int l, int r) {
     right.direction(r);
 }
 
-void Robot::turn_right() {
+void Robot::turn_right(unsigned int l, unsigned int r) {
     set_direction(HIGH, LOW);
+    speed(l, r);
 }
 
-void Robot::turn_left() {
+void Robot::turn_left(unsigned int l, unsigned int r) {
     set_direction(LOW, HIGH);
+    speed(l, r);
 }
 
-void Robot::go_forward() {
+void Robot::go_forward(unsigned int l, unsigned int r) {
     set_direction(HIGH, HIGH);
+    speed(l, r);
 }
 
-void Robot::go_backward() {
+void Robot::go_backward(unsigned int l, unsigned int r) {
     set_direction(LOW, LOW);
+    speed(l, r);
 }
 
 void Robot::stop() {
     set_direction(LOW, LOW);
-    left.speed(0);
-    right.speed(0);
+    speed(0, 0);
 }
 
