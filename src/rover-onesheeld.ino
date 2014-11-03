@@ -1,69 +1,68 @@
 #include <OneSheeld.h>
+#include "robot.h"
 
-#define MAX(a,b) (((a)>(b))?(a):(b))
+#define NUM_ITERATIONS 10
+#define FORWARD_LEFT_Y_FAC 0.5
+#define FORWARD_RIGHT_Y_FAC 1.6
+#define BACKWARD_LEFT_Y_FAC FORWARD_RIGHT_Y_FAC
+#define BACKWARD_RIGHT_Y_FAC FORWARD_LEFT_Y_FAC
 
-int M1 = 4; // motor 1 direction
-int E1 = 5; // motor 1 speed
-int E2 = 6; // motor 2 speed
-int M2 = 7; // motor 2 direction
+Robot robot;
 
-void stop(void)
-{
-    digitalWrite(E1, LOW);
-    digitalWrite(E2, LOW);
-}
-
-void setup()
-{
+void setup() {
     OneSheeld.begin();
-    
-    pinMode(M1, OUTPUT);
-    pinMode(E1, OUTPUT);
-    pinMode(E2, OUTPUT);
-    pinMode(M2, OUTPUT);
 }
 
-void loop()
-{
-    if (abs(AccelerometerSensor.getX()) > 1 || abs(AccelerometerSensor.getY()) > 1) {
-        int x = ceil(AccelerometerSensor.getX());
-        int y = ceil(AccelerometerSensor.getY());
+int current_x = 0;
+int i = 0;
+int left_dir, right_dir, left_speed, right_speed;
 
-        int outputX = abs(x) * 27 + 8;
-        int outputY = abs(y) * 27 + 8;
-        
-        outputX = MAX(outputX, 255);
-        outputY = MAX(outputY, 255);
-        
-        if (outputX > outputY) {
-            analogWrite(E1, outputX);
-            analogWrite(E2, outputX);
-            
-            if (x < 0) {
-                digitalWrite(M1, HIGH);
-                digitalWrite(M2, HIGH);
-            } else {
-                digitalWrite(M1, LOW);
-                digitalWrite(M2, LOW);
-            }
-          
-        } else { // outputX < outputY
-            analogWrite(E1, outputY);
-            analogWrite(E2, outputY);
-            
-            if (y > 0) {
-                digitalWrite(M1, HIGH);
-                digitalWrite(M2, LOW);
-            } else {
-                digitalWrite(M1, LOW);
-                digitalWrite(M2, HIGH);
-            }
+void loop() {
+    int x = ceil(AccelerometerSensor.getX());
+    int y = ceil(AccelerometerSensor.getY());
 
-        }
-      
-    } else {
-      stop();
+    if (abs(x) <= 1 && abs(y) <= 1) {
+        return robot.stop();
     }
-    
+
+    if (x == current_x) {
+        if (++i > NUM_ITERATIONS) {
+            /*
+             * The same direction has been
+             * recorded for NUM_ITERATIONS.
+             */
+            return robot.stop();
+        }
+    } else {
+        current_x = x;
+        i = 0;
+    }
+
+
+    if (x < 0) {
+        left_dir = x + y;
+        right_dir = x - y;
+        left_speed = x + y*BACKWARD_LEFT_Y_FAC;
+        right_speed = x - y*BACKWARD_RIGHT_Y_FAC;
+    } else {
+        left_dir = x - y;
+        right_dir = x + y;
+        left_speed = x - y*FORWARD_LEFT_Y_FAC;
+        right_speed = x + y*FORWARD_RIGHT_Y_FAC;
+    }
+
+    if (left_dir > 0 && right_dir > 0) {
+        robot.go_forward();
+    } else if (left_dir < 0 && right_dir > 0) {
+        robot.turn_left();
+    } else if (left_dir > 0 && right_dir < 0) {
+        robot.turn_right();
+    } else {
+        robot.go_backward();
+    }
+
+    left_speed = abs(left_speed) * 25;
+    right_speed = abs(right_speed) * 25;
+    robot.speed(left_speed, right_speed);
 }
 
