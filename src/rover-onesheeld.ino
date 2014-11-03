@@ -44,7 +44,8 @@ void loop() {
 
         /*
          * The Arduino takes values for motor speed in the
-         * interval [0, 255] so we need to scale up our input.
+         * interval [0, 255] while AccelerometerSensor reports
+         * values in [-9.8, 9.8], so we need to scale our input.
          */
         left.speed = abs(left.speed) * SCALE_FACTOR;
         right.speed = abs(right.speed) * SCALE_FACTOR;
