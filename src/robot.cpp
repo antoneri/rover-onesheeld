@@ -24,23 +24,19 @@ void Robot::direction(int l, int r) {
 }
 
 void Robot::turn_right(unsigned int l, unsigned int r) {
-    direction(HIGH, LOW);
-    speed(l, r);
+    Robot::direct<HIGH, LOW>(l, r);
 }
 
 void Robot::turn_left(unsigned int l, unsigned int r) {
-    direction(LOW, HIGH);
-    speed(l, r);
+    Robot::direct<LOW, HIGH>(l, r);
 }
 
 void Robot::go_forward(unsigned int l, unsigned int r) {
-    direction(HIGH, HIGH);
-    speed(l, r);
+    Robot::direct<HIGH, HIGH>(l, r);
 }
 
 void Robot::go_backward(unsigned int l, unsigned int r) {
-    direction(LOW, LOW);
-    speed(l, r);
+    Robot::direct<LOW, LOW>(l, r);
 }
 
 void Robot::run(track *tracks) {
@@ -59,7 +55,6 @@ void Robot::run(track *tracks) {
 }
 
 void Robot::stop() {
-    direction(LOW, LOW);
-    speed(0, 0);
+    Robot::direct<LOW, LOW>(0, 0);
 }
 

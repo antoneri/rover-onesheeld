@@ -10,6 +10,11 @@ class Robot {
     void setup();
     void speed(unsigned int l, unsigned int r);
     void direction(int l, int r);
+    template <int L, int R>
+    void direct(unsigned int l, unsigned int r) {
+        direction(L, R);
+        speed(l, r);
+    }
     void turn_right(unsigned int l, unsigned int r);
     void turn_left(unsigned int l, unsigned int r);
     void go_forward(unsigned int l, unsigned int r);
