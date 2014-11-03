@@ -9,9 +9,5 @@ void Motor::speed(unsigned int speed) {
 }
 
 void Motor::direction(int direction) {
-    if (direction != HIGH ||
-        direction != LOW) {
-        return;
-    }
     digitalWrite(digital_pin, direction);
 }

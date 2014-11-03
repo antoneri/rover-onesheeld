@@ -1,68 +1,68 @@
 #include <OneSheeld.h>
 #include "robot.h"
 
-#define NUM_ITERATIONS 10
-#define FORWARD_LEFT_Y_FAC 0.5
-#define FORWARD_RIGHT_Y_FAC 1.6
-#define BACKWARD_LEFT_Y_FAC FORWARD_RIGHT_Y_FAC
-#define BACKWARD_RIGHT_Y_FAC FORWARD_LEFT_Y_FAC
+#define F_LEFT_Y_FAC 0.5
+#define F_RIGHT_Y_FAC 1.6
+#define B_LEFT_Y_FAC F_RIGHT_Y_FAC
+#define B_RIGHT_Y_FAC F_LEFT_Y_FAC
 
 Robot robot;
+
+struct {
+    int direction;
+    int speed;
+} left, right;
 
 void setup() {
     OneSheeld.begin();
 }
 
-int current_x = 0;
-int i = 0;
-int left_dir, right_dir, left_speed, right_speed;
-
 void loop() {
     int x = ceil(AccelerometerSensor.getX());
     int y = ceil(AccelerometerSensor.getY());
 
-    if (abs(x) <= 1 && abs(y) <= 1) {
-        return robot.stop();
-    }
-
-    if (x == current_x) {
-        if (++i > NUM_ITERATIONS) {
-            /*
-             * The same direction has been
-             * recorded for NUM_ITERATIONS.
-             */
-            return robot.stop();
+    if (abs(x) > 1 || abs(y) > 1) {
+        /*
+         * Set the speed on each motor.
+         * Negative x is forward, negative y is left.
+         */
+        if (x < 0) {
+            left.direction = x + y;
+            right.direction = x - y;
+            left.speed = x + y*F_LEFT_Y_FAC;
+            right.speed = x - y*F_RIGHT_Y_FAC;
+        } else if (x > 0) {
+            left.direction = x - y;
+            right.direction = x + y;
+            left.speed = x - y*B_LEFT_Y_FAC;
+            right.speed = x + y*B_RIGHT_Y_FAC;
+        } else {
+            /* Turn in place */
+            left.direction = -y;
+            right.direction = y;
+            left.speed = y;
+            right.speed = y;
         }
+
+        left.speed = abs(left.speed) * 25;
+        right.speed = abs(right.speed) * 25;
+
+        /*
+         * Set the direction for each motor.
+         */
+        if (left.direction > 0 && right.direction > 0) {
+            robot.go_forward();
+        } else if (left.direction > 0 && right.direction < 0) {
+            robot.turn_left();
+        } else if (left.direction < 0 && right.direction > 0) {
+            robot.turn_right();
+        } else {
+            robot.go_backward();
+        }
+
+        robot.speed(left.speed, right.speed);
     } else {
-        current_x = x;
-        i = 0;
+        robot.stop();
     }
-
-
-    if (x < 0) {
-        left_dir = x + y;
-        right_dir = x - y;
-        left_speed = x + y*BACKWARD_LEFT_Y_FAC;
-        right_speed = x - y*BACKWARD_RIGHT_Y_FAC;
-    } else {
-        left_dir = x - y;
-        right_dir = x + y;
-        left_speed = x - y*FORWARD_LEFT_Y_FAC;
-        right_speed = x + y*FORWARD_RIGHT_Y_FAC;
-    }
-
-    if (left_dir > 0 && right_dir > 0) {
-        robot.go_forward();
-    } else if (left_dir < 0 && right_dir > 0) {
-        robot.turn_left();
-    } else if (left_dir > 0 && right_dir < 0) {
-        robot.turn_right();
-    } else {
-        robot.go_backward();
-    }
-
-    left_speed = abs(left_speed) * 25;
-    right_speed = abs(right_speed) * 25;
-    robot.speed(left_speed, right_speed);
 }
 
