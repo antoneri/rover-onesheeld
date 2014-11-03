@@ -7,7 +7,6 @@ class Robot {
   private:
     Motor left;
     Motor right;
-    void setup();
     template <int L, int R>
     void drive(unsigned int l, unsigned int r) {
         left.direction(L);

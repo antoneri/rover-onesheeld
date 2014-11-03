@@ -3,10 +3,6 @@
 Robot::Robot()
     : left(M1_ANALOG_PIN, M1_DIGITAL_PIN),
       right(M2_ANALOG_PIN, M2_DIGITAL_PIN) {
-    setup();
-}
-
-void Robot::setup() {
     pinMode(M1_ANALOG_PIN, OUTPUT);
     pinMode(M1_DIGITAL_PIN, OUTPUT);
     pinMode(M2_ANALOG_PIN, OUTPUT);
