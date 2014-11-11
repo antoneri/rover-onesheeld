@@ -8,6 +8,7 @@
 #define B_RIGHT_Y_FAC F_LEFT_Y_FAC
 
 Robot robot;
+Robot::track left, right;
 
 void setup() {
     OneSheeld.begin();
@@ -18,8 +19,6 @@ void loop() {
     int y = ceil(AccelerometerSensor.getY());
 
     if (abs(x) > 1 || abs(y) > 1) {
-        Robot::track left, right;
-
         /*
          * Calculate the speed and direction from accelerometer data.
          * Negative x is forward, negative y is left.
