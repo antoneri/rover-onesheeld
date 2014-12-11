@@ -1,0 +1,3 @@
+[submodule "lib/OneSheeld"]
+	path = lib/OneSheeld
+	url = https://github.com/Integreight/1Sheeld-Arduino-Library
