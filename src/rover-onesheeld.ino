@@ -2,10 +2,7 @@
 #include "robot.h"
 
 #define SCALE_FACTOR 25
-#define F_LEFT_FAC 0.5
-#define F_RIGHT_FAC 1.6
-#define B_LEFT_FAC F_RIGHT_FAC // switch factors when going backwards
-#define B_RIGHT_FAC F_LEFT_FAC
+#define TURN_FAC 0.5
 
 Robot robot;
 Robot::track left, right;
@@ -24,16 +21,32 @@ void loop() {
          * Calculate the speed and direction from accelerometer data.
          * Negative "x" is forward, negative "turn" is left.
          */
-        if (x < 0) {
-            left.direction = x + turn;
-            right.direction = x - turn;
-            left.speed = x + turn*F_LEFT_FAC;
-            right.speed = x - turn*F_RIGHT_FAC;
-        } else if (x > 0) {
-            left.direction = x - turn;
-            right.direction = x + turn;
-            left.speed = x - turn*B_LEFT_FAC;
-            right.speed = x + turn*B_RIGHT_FAC;
+        if (x < 1) {
+            left.direction = x;
+            right.direction = x;
+            if (turn < -2) {
+                left.speed = x + turn;
+                right.speed = x*TURN_FAC;
+            } else if (turn > 2) {
+                left.speed = x*TURN_FAC;
+                right.speed = x - turn;
+            } else {
+                left.speed = x;
+                right.speed = x;
+            }
+        } else if (x > 1) {
+            left.direction = x;
+            right.direction = x;
+            if (turn < -2) {
+                left.speed = x - turn;
+                right.speed = x*TURN_FAC;
+            } else if (turn > 2) {
+                left.speed = x*TURN_FAC;
+                right.speed = x + turn;
+            } else {
+                left.speed = x;
+                right.speed = x;
+            }
         } else {
             /* Turn in place */
             left.direction = -turn;
@@ -58,4 +71,3 @@ void loop() {
         robot.stop();
     }
 }
-
