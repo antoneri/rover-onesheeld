@@ -21,6 +21,7 @@ void loop() {
          * Negative "x" is forward, negative "y" is left.
          */
         if (x < -1 || x > 1) {
+            /* Only the sign in "direction" is significant. */
             robot.leftDirection = x;
             robot.rightDirection = x;
             robot.leftSpeed = abs(x);
@@ -28,12 +29,14 @@ void loop() {
 
             /*
              * Decrease "inner" track speed proportionally
-             * to the inverse of y.
+             * to the inverse of "y".
              */
             if (y < -2) {
+                /* Turn left */
                 robot.leftSpeed *= TURN_FACTOR/abs(y);
                 robot.rightSpeed += abs(y);
             } else if (y > 2) {
+                /* Turn right */
                 robot.leftSpeed += abs(y);
                 robot.rightSpeed *= TURN_FACTOR/abs(y);
             }
@@ -54,7 +57,6 @@ void loop() {
         robot.leftSpeed *= SCALE_FACTOR;
         robot.rightSpeed *= SCALE_FACTOR;
 
-        /* Set the speed and direction for each motor. */
         robot.run();
 
     } else {
