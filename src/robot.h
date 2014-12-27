@@ -7,6 +7,7 @@ class Robot {
   private:
     Motor left;
     Motor right;
+
     template <int L, int R>
     void drive(unsigned int l, unsigned int r) {
         left.direction(L);
@@ -14,13 +15,15 @@ class Robot {
         left.speed(l);
         right.speed(r);
     }
+
   public:
-    typedef struct track {
-        int direction;
-        int speed;
-    };
+    int leftSpeed;
+    int rightSpeed;
+    int leftDirection;
+    int rightDirection;
+
     Robot();
-    void run(track *tracks);
+    void run();
     void stop();
 };
 
