@@ -31,17 +31,17 @@ void loop() {
              * to the inverse of y.
              */
             if (y < -2) {
-                robot.leftSpeed += abs(y);
-                robot.rightSpeed *= TURN_FACTOR/abs(y);
-            } else if (y > 2) {
                 robot.leftSpeed *= TURN_FACTOR/abs(y);
                 robot.rightSpeed += abs(y);
+            } else if (y > 2) {
+                robot.leftSpeed += abs(y);
+                robot.rightSpeed *= TURN_FACTOR/abs(y);
             }
 
         } else {
             /* Turn in place */
-            robot.leftDirection = -y;
-            robot.rightDirection = y;
+            robot.leftDirection = y;
+            robot.rightDirection = -y;
             robot.leftSpeed = abs(y);
             robot.rightSpeed = abs(y);
         }

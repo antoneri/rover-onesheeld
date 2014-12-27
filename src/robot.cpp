@@ -1,8 +1,8 @@
 #include "robot.h"
 
 Robot::Robot()
-    : left(M1_ANALOG_PIN, M1_DIGITAL_PIN),
-      right(M2_ANALOG_PIN, M2_DIGITAL_PIN),
+    : right(M1_ANALOG_PIN, M1_DIGITAL_PIN),
+      left(M2_ANALOG_PIN, M2_DIGITAL_PIN),
       leftDirection(0),
       rightDirection(0),
       leftSpeed(0),
