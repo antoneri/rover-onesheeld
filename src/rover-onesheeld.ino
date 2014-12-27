@@ -2,10 +2,9 @@
 #include "robot.h"
 
 #define SCALE_FACTOR 25
-#define TURN_FAC 0.5
+#define TURN_FACTOR 1.6
 
 Robot robot;
-Robot::track left, right;
 
 void setup() {
     OneSheeld.begin();
@@ -13,46 +12,38 @@ void setup() {
 
 void loop() {
     int x = ceil(AccelerometerSensor.getX());
-    int turn = ceil(AccelerometerSensor.getY());
+    int y = ceil(AccelerometerSensor.getY());
 
-    if (abs(x) > 1 || abs(turn) > 1) {
+    if (abs(x) > 1 || abs(y) > 1) {
 
         /*
          * Calculate the speed and direction from accelerometer data.
-         * Negative "x" is forward, negative "turn" is left.
+         * Negative "x" is forward, negative "y" is left.
          */
-        if (x < 1) {
-            left.direction = x;
-            right.direction = x;
-            if (turn < -2) {
-                left.speed = x + turn;
-                right.speed = x*TURN_FAC;
-            } else if (turn > 2) {
-                left.speed = x*TURN_FAC;
-                right.speed = x - turn;
-            } else {
-                left.speed = x;
-                right.speed = x;
+        if (x < -1 || x > 1) {
+            robot.leftDirection = x;
+            robot.rightDirection = x;
+            robot.leftSpeed = abs(x);
+            robot.rightSpeed = abs(x);
+
+            /*
+             * Decrease "inner" track speed proportionally
+             * to the inverse of y.
+             */
+            if (y < -2) {
+                robot.leftSpeed += abs(y);
+                robot.rightSpeed *= TURN_FACTOR/abs(y);
+            } else if (y > 2) {
+                robot.leftSpeed *= TURN_FACTOR/abs(y);
+                robot.rightSpeed += abs(y);
             }
-        } else if (x > 1) {
-            left.direction = x;
-            right.direction = x;
-            if (turn < -2) {
-                left.speed = x - turn;
-                right.speed = x*TURN_FAC;
-            } else if (turn > 2) {
-                left.speed = x*TURN_FAC;
-                right.speed = x + turn;
-            } else {
-                left.speed = x;
-                right.speed = x;
-            }
+
         } else {
             /* Turn in place */
-            left.direction = -turn;
-            right.direction = turn;
-            left.speed = turn;
-            right.speed = turn;
+            robot.leftDirection = -y;
+            robot.rightDirection = y;
+            robot.leftSpeed = abs(y);
+            robot.rightSpeed = abs(y);
         }
 
         /*
@@ -60,12 +51,11 @@ void loop() {
          * interval [0, 255] while AccelerometerSensor reports
          * values in [-9.8, 9.8], so we need to scale our input.
          */
-        left.speed = abs(left.speed) * SCALE_FACTOR;
-        right.speed = abs(right.speed) * SCALE_FACTOR;
+        robot.leftSpeed *= SCALE_FACTOR;
+        robot.rightSpeed *= SCALE_FACTOR;
 
         /* Set the speed and direction for each motor. */
-        Robot::track tracks[2] = {left, right};
-        robot.run(tracks);
+        robot.run();
 
     } else {
         robot.stop();
